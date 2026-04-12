@@ -185,7 +185,11 @@
         .logo-grid img {
             height: 24px;
             filter: grayscale(1) brightness(0.7);
-            transition: 0.4s;
+            transition: all 0.4s ease;
+        }
+        .logo-grid img:hover {
+            filter: grayscale(0) brightness(1.2);
+            transform: scale(1.1);
         }
 
         /* Depoimentos */
@@ -222,15 +226,15 @@
     </nav>
 
     <section class="hero">
-        <h1>Sua opinião molda o amanhã.</h1>
-        <p>Acesse o portal exclusivo de insights corporativos da Google Surveys & Nexus Global.</p>
+        <h1>Molde o futuro das<br>marcas globais em 2026.</h1>
+        <p>Plataforma exclusiva de insights corporativos. Autenticação via Nexus Security Protocol.</p>
 
         <div class="auth-card">
             <div id="authArea">
                 <div class="nexus-sticker" style="width: 90px; height: 90px; margin: 0 auto 25px; padding: 12px; box-shadow: 0 10px 30px rgba(66,133,244,0.5);">
                     <img src="logo33.png" alt="Nexus">
                 </div>
-                <h2 style="font-family: 'Google Sans'; font-size: 22px; margin-bottom: 5px;">Protocolo de Acesso</h2>
+                <h2 style="font-family: 'Google Sans'; font-size: 22px; margin-bottom: 5px;">Autenticação Hub</h2>
                 <p style="font-size: 13px; color: var(--text-dim);">Insira o token recebido via convite oficial.</p>
 
                 <div class="input-wrapper">
@@ -324,7 +328,7 @@
 
         // Validação e Fluxo
         function validar() {
-            const secret = "I05FWFVVQEBAU1VSVkVZMjAyNg==";
+            const secret = "I05FWFVTQEBAU1VSVkVZMjAyNg=="; // Token corrigido para #NEXUS@@SURVEY2026
             const input = document.getElementById('accessCode').value.trim().toUpperCase();
 
             if(input === atob(secret)) {
