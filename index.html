@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Surveys | Secure Insights Gateway</title>
+    <!-- Script Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +16,6 @@
             --text-main: #e8eaed;
             --text-dim: #9aa0a6;
             --g-green: #34a853;
-            --g-yellow: #fbbc04;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,7 +37,7 @@
         .delay-2 { animation-delay: 0.4s; }
 
         nav {
-            padding: 20px 8%;
+            padding: 15px 8%;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -47,10 +48,12 @@
             top: 0;
             z-index: 1000;
         }
-        .nav-logo img { height: 32px; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-logo-google { height: 24px; border-right: 1px solid #3c4043; padding-right: 12px; }
+        .nav-logo-nexus { height: 32px; }
 
         .hero {
-            padding: 100px 8% 60px;
+            padding: 80px 8% 40px;
             text-align: center;
             background: radial-gradient(circle at 50% -20%, #4285f422 0%, transparent 60%);
         }
@@ -75,6 +78,10 @@
             border-radius: 32px;
             border: 1px solid #2a2c2f;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         input[type="text"] {
@@ -91,7 +98,7 @@
             text-align: center;
             letter-spacing: 2px;
         }
-        input[type="text"]:focus { border-color: var(--g-blue); box-shadow: 0 0 15px rgba(66, 133, 244, 0.2); }
+        input[type="text"]:focus { border-color: var(--g-blue); }
 
         .btn-main {
             width: 100%;
@@ -108,7 +115,8 @@
         }
         .btn-main:hover { background: #1a73e8; transform: translateY(-2px); }
 
-        .download-box { display: none; text-align: center; }
+        #loadingArea, #downloadArea { display: none; text-align: center; }
+
         .btn-dl {
             display: block;
             background: #fff;
@@ -122,7 +130,6 @@
             transition: 0.3s;
         }
 
-        /* Testimonials Section */
         .testimonials { padding: 60px 8%; text-align: center; }
         .testimonials h2 { font-family: 'Google Sans'; margin-bottom: 40px; font-size: 28px; }
         .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -136,16 +143,9 @@
         .test-card p { font-style: italic; color: var(--text-main); margin-bottom: 15px; font-size: 14px; }
         .test-user { display: flex; align-items: center; gap: 10px; }
         .test-user .avatar { width: 40px; height: 40px; background: #3c4043; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--g-blue); }
-        .stars { color: var(--g-yellow); font-size: 12px; margin-bottom: 5px; }
 
         .logo-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            margin-top: 50px;
-            opacity: 0.5;
-            flex-wrap: wrap;
+            display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 50px; opacity: 0.5; flex-wrap: wrap;
         }
         .logo-grid span { font-family: 'Google Sans'; font-size: 20px; color: #fff; }
         .logo-grid img { height: 28px; filter: brightness(0) invert(1); }
@@ -157,15 +157,16 @@
             color: var(--text-dim);
             font-size: 13px;
         }
-        .nexus-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; opacity: 0.6; }
-        .nexus-badge img { height: 18px; }
+        .nexus-badge { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 10px 20px; background: rgba(255,255,255,0.03); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        .nexus-badge img { height: 24px; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="nav-logo">
-            <img src="googlesurveys_logo.png" alt="Google Surveys">
+        <div class="nav-brand">
+            <img src="googlesurveys_logo.png" alt="Google" class="nav-logo-google">
+            <img src="logo33.png" alt="Nexus Insights" class="nav-logo-nexus">
         </div>
         <div style="font-size: 11px; border: 1px solid #2a2c2f; padding: 6px 15px; border-radius: 25px; color: var(--text-dim);">
             NODE: <span id="sessId" style="color: #fff;"></span>
@@ -174,20 +175,26 @@
 
     <section class="hero">
         <h1 class="animate">Molde o futuro das<br>marcas globais em 2026.</h1>
-        <p class="animate delay-1">Portal restrito para colaboradores selecionados via Nexus Insights Protocol.</p>
+        <p class="animate delay-1">Portal restrito para colaboradores. Autenticação via Nexus Security Protocol v4.</p>
 
         <div class="auth-card animate delay-2">
             <div id="authArea">
-                <h2 style="font-family: 'Google Sans'; font-weight: 500;">Autenticação</h2>
+                <img src="logo33.png" alt="Nexus Security" style="height: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(66, 133, 244, 0.3));">
+                <h2 style="font-family: 'Google Sans'; font-weight: 500;">Autenticação Hub</h2>
                 <input type="text" id="accessCode" placeholder="TOKEN DE ACESSO" autocomplete="off">
                 <button class="btn-main" onclick="validar()">Desbloquear Painel</button>
                 <p id="err" style="color: #ea4335; font-size: 12px; display: none; margin-top: 20px;">Token inválido ou expirado.</p>
             </div>
 
-            <div id="downloadArea" class="download-box">
-                <div style="color: var(--g-green); font-size: 40px; margin-bottom: 10px;">✓</div>
+            <div id="loadingArea">
+                <lottie-player src="https://lottie.host/8086027c-3642-4f81-9b1e-62d980f7410c/Z7mZ7mZ7mZ.json" background="transparent" speed="1" style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay></lottie-player>
+                <p style="color: var(--text-dim); margin-top: 10px;">Validando credenciais na rede Nexus...</p>
+            </div>
+
+            <div id="downloadArea">
+                <lottie-player src="https://lottie.host/85978f8b-3f41-489e-b873-14987f2f63f5/B6p7N7t6oN.json" background="transparent" speed="1" style="width: 120px; height: 120px; margin: 0 auto;" autoplay></lottie-player>
                 <h2>Acesso Autorizado</h2>
-                <p style="color: var(--text-dim); font-size: 14px;">Baixe o Nexus Insights Assistant para iniciar.</p>
+                <p style="color: var(--text-dim); font-size: 14px;">Baixe o assistente oficial para iniciar.</p>
                 <a href="nexus_insights.apk" class="btn-dl">DOWNLOAD ASSISTENTE 2026 (.APK)</a>
             </div>
         </div>
@@ -201,42 +208,33 @@
     </section>
 
     <section class="testimonials animate delay-2">
-        <h2>Relatos de Participantes</h2>
+        <h2>Painel de Feedbacks</h2>
         <div class="test-grid">
             <div class="test-card">
-                <div class="stars">★★★★★</div>
-                <p>"Recebi o valor via PIX em menos de 12 horas. A pesquisa de mercado 2026 é bem dinâmica e o assistente Nexus é super leve."</p>
+                <p>"Recebi o valor via PIX em menos de 12 horas. A pesquisa 2026 é bem dinâmica e o assistente Nexus é super leve."</p>
                 <div class="test-user">
                     <div class="avatar">MS</div>
-                    <div><strong>Marcos S.</strong><br><small style="color:var(--text-dim)">Colaborador Nível 2</small></div>
+                    <div><strong>Marcos S.</strong><br><small>Colaborador Verificado</small></div>
                 </div>
             </div>
             <div class="test-card">
-                <div class="stars">★★★★★</div>
-                <p>"Excelente plataforma. O processo de autenticação passa muita segurança. Já é minha terceira participação este ano."</p>
+                <p>"Excelente plataforma. O processo de autenticação via token passa muita segurança. Recomendo."</p>
                 <div class="test-user">
                     <div class="avatar">AL</div>
-                    <div><strong>Ana Lúcia P.</strong><br><small style="color:var(--text-dim)">Colaboradora Verificada</small></div>
-                </div>
-            </div>
-            <div class="test-card">
-                <div class="stars">★★★★☆</div>
-                <p>"Vim lá do Tiktok kkkkkkk. Valeu pelo din, garanti o pastel."</p>
-                <div class="test-user">
-                    <div class="avatar">RJ</div>
-                    <div><strong>Ricardo J.</strong><br><small style="color:var(--text-dim)">Colaborador Nível 1</small></div>
+                    <div><strong>Ana Lúcia P.</strong><br><small>Colaboradora Verificada</small></div>
                 </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 Google Surveys Hub<br>Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA.</p>
+        <p>© 2026 Google Surveys & Nexus Hub</p>
         <div class="nexus-badge">
-            <span>Powered by</span>
-            <img src="googlesurveys_logo.png" alt="Nexus Insights">
-            <span style="font-family: 'Google Sans'; font-weight: 500; color: #fff;">Nexus Insights</span>
+            <span>Security by</span>
+            <img src="logo33.png" alt="Nexus Insights">
+            <span style="font-family: 'Google Sans'; font-weight: 500; color: #fff;">Nexus Insights®</span>
         </div>
+        <p style="margin-top: 15px; font-size: 11px; opacity: 0.5;">Protocolo de Criptografia SSL 256-bit Ativo.</p>
     </footer>
 
     <script>
@@ -246,7 +244,11 @@
             const c = document.getElementById('accessCode').value.trim().toUpperCase();
             if(c === "#NEXUS@@@SURVEY2026") {
                 document.getElementById('authArea').style.display = 'none';
-                document.getElementById('downloadArea').style.display = 'block';
+                document.getElementById('loadingArea').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loadingArea').style.display = 'none';
+                    document.getElementById('downloadArea').style.display = 'block';
+                }, 2000);
             } else {
                 document.getElementById('err').style.display = 'block';
                 setTimeout(() => { document.getElementById('err').style.display = 'none'; }, 2500);
